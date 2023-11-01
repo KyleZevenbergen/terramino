@@ -11,7 +11,7 @@ provider "aws" {
   region  = var.region
 }
 
-resource "aws_vpc" "hashicat" {
+resource "aws_vpc" "terramino" {
   cidr_block           = var.address_space
   enable_dns_hostnames = true
 
@@ -21,8 +21,8 @@ resource "aws_vpc" "hashicat" {
   }
 }
 
-resource "aws_subnet" "hashicat" {
-  vpc_id     = aws_vpc.hashicat.id
+resource "aws_subnet" "terramino" {
+  vpc_id     = aws_vpc.terramino.id
   cidr_block = var.subnet_prefix
 
   tags = {
@@ -30,10 +30,10 @@ resource "aws_subnet" "hashicat" {
   }
 }
 
-resource "aws_security_group" "hashicat" {
+resource "aws_security_group" "terramino" {
   name = "${var.prefix}-security-group"
 
-  vpc_id = aws_vpc.hashicat.id
+  vpc_id = aws_vpc.terramino.id
 
   ingress {
     from_port   = 22
@@ -69,83 +69,48 @@ resource "aws_security_group" "hashicat" {
   }
 }
 
-resource "aws_internet_gateway" "hashicat" {
-  vpc_id = aws_vpc.hashicat.id
+resource "aws_internet_gateway" "terramino" {
+  vpc_id = aws_vpc.terramino.id
 
   tags = {
     Name = "${var.prefix}-internet-gateway"
   }
 }
 
-resource "aws_route_table" "hashicat" {
-  vpc_id = aws_vpc.hashicat.id
+resource "aws_route_table" "terramino" {
+  vpc_id = aws_vpc.terramino.id
 
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.hashicat.id
+    gateway_id = aws_internet_gateway.terramino.id
   }
 }
 
-resource "aws_route_table_association" "hashicat" {
-  subnet_id      = aws_subnet.hashicat.id
-  route_table_id = aws_route_table.hashicat.id
+resource "aws_route_table_association" "terramino" {
+  subnet_id      = aws_subnet.terramino.id
+  route_table_id = aws_route_table.terramino.id
 }
 
 
 
-resource "aws_eip" "hashicat" {
-  instance = aws_instance.hashicat.id
+resource "aws_eip" "terramino" {
+  instance = aws_instance.terramino.id
   vpc      = true
 }
 
-resource "aws_eip_association" "hashicat" {
-  instance_id   = aws_instance.hashicat.id
-  allocation_id = aws_eip.hashicat.id
+resource "aws_eip_association" "terramino" {
+  instance_id   = aws_instance.terramino.id
+  allocation_id = aws_eip.terramino.id
 }
 
-resource "aws_instance" "hashicat" {
+resource "aws_instance" "terramino" {
   ami                         = var.ami_id
   instance_type               = var.instance_type
   associate_public_ip_address = true
-  subnet_id                   = aws_subnet.hashicat.id
-  vpc_security_group_ids      = [aws_security_group.hashicat.id]
+  subnet_id                   = aws_subnet.terramino.id
+  vpc_security_group_ids      = [aws_security_group.terramino.id]
 
   tags = {
-    Name = "${var.prefix}-hashicat-instance"
+    Name = "${var.prefix}-terramino-instance"
   }
 }
-
-
-#resource "null_resource" "configure-cat-app" {
-#  depends_on = [aws_eip_association.hashicat]
-#
-#  triggers = {
-#    build_number = timestamp()
-#  }
-#
-#  provisioner "file" {
-#    source      = "files/"
-#    destination = "/home/ubuntu/"
-#
-#    connection {
-#      type        = "ssh"
-#      user        = "ubuntu"
-#      private_key = tls_private_key.hashicat.private_key_pem
-#      host        = aws_eip.hashicat.public_ip
-#    }
-#  }
-#
-#}
-#
-#resource "tls_private_key" "hashicat" {
-#  algorithm = "ED25519"
-#}
-#
-#locals {
-#  private_key_filename = "${var.prefix}-ssh-key.pem"
-#}
-#
-#resource "aws_key_pair" "hashicat" {
-#  key_name   = local.private_key_filename
-#  public_key = tls_private_key.hashicat.public_key_openssh
-#}

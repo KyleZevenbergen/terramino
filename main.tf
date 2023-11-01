@@ -104,7 +104,7 @@ resource "aws_eip_association" "terramino" {
 }
 
 resource "aws_instance" "terramino" {
-  ami                         = var.ami_id
+  ami                         = var.terramino_ami_id
   instance_type               = var.instance_type
   associate_public_ip_address = true
   subnet_id                   = aws_subnet.terramino.id

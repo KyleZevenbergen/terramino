@@ -44,6 +44,6 @@ variable "width" {
   description = "Image width in pixels."
 }
 
-variable "ami_id" {
+variable "terramino_ami_id" {
   type = string
 }

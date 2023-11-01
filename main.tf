@@ -111,6 +111,6 @@ resource "aws_instance" "terramino" {
   vpc_security_group_ids      = [aws_security_group.terramino.id]
 
   tags = {
-    Name = "${var.prefix}-terramino-instance"
+    Name = "${var.prefix}-instance"
   }
 }

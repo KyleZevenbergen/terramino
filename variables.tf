@@ -26,7 +26,7 @@ variable "subnet_prefix" {
 
 variable "instance_type" {
   description = "Specifies the AWS instance type."
-  default     = "m7g.8xlarge"
+  default     = "t2.micro"
 }
 
 variable "admin_username" {

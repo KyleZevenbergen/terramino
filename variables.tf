@@ -31,7 +31,7 @@ variable "instance_type" {
 
 variable "admin_username" {
   description = "Administrator user name for mysql"
-  default     = "dog"
+  default     = "admin"
 }
 
 variable "height" {

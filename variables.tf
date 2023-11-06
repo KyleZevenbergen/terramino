@@ -26,12 +26,12 @@ variable "subnet_prefix" {
 
 variable "instance_type" {
   description = "Specifies the AWS instance type."
-  default     = "t3.2xlarge"
+  default     = "t2.micro"
 }
 
 variable "admin_username" {
   description = "Administrator user name for mysql"
-  default     = "user1"
+  default     = "admin"
 }
 
 variable "height" {
